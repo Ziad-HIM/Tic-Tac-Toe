@@ -61,6 +61,60 @@
     <div class="cell" data-index="8"></div>
   </div>
   <div class="result"></div>
-  <script src="script.js"></script>
+  <script>
+    const cells = document.querySelectorAll('.cell');
+    const result = document.querySelector('.result');
+    let currentPlayer = 'X';
+    let board = ['', '', '', '', '', '', '', '', ''];
+    let gameActive = true;
+
+    cells.forEach(cell => {
+      cell.addEventListener('click', handleClick);
+    });
+
+    function handleClick(e) {
+      if (gameActive) {
+        const index = parseInt(e.target.dataset.index);
+        if (board[index] === '') {
+          board[index] = currentPlayer;
+          e.target.textContent = currentPlayer;
+          e.target.classList.add(currentPlayer.toLowerCase());
+          checkWin();
+          switchPlayer();
+        }
+      }
+    }
+
+    function switchPlayer() {
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    }
+
+    function checkWin() {
+      const winConditions = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+      ];
+
+      for (let i = 0; i < winConditions.length; i++) {
+        const [a, b, c] = winConditions[i];
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+          gameActive = false;
+          result.textContent = `Player ${currentPlayer} wins!`;
+          return;
+        }
+      }
+
+      if (!board.includes('')) {
+        gameActive = false;
+        result.textContent = "It's a draw!";
+      }
+    }
+  </script>
 </body>
 </html>
